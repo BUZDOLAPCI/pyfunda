@@ -10,11 +10,17 @@ The only working real Python API for Funda ([funda.nl](https://www.funda.nl)) �
 
 [![Star History Chart](https://api.star-history.com/svg?repos=0xMH/pyfunda&type=Date)](https://star-history.com/#0xMH/pyfunda&Date)
 
-## Installation
+## Why I'm open-sourcing this?
 
-```bash
-pip install pyfunda
-```
+After pyfunda, I got messages asking why I'd give this away when aggregators will just take it and sell it. They're right, every week there's a new "revolutionary AI-powered housing finder" charging €40/month or a €250 "success fee.". They all pull from the same one or two sources and wrap it in a fancy UI completely built with AI.
+
+That's exactly why I'm open-sourcing it.
+
+These services are selling air to people who are looking for any kind of hope. The data is public. The APIs aren't hard to figure out. You shouldn't have to pay someone to refresh a webpage for you. Funda could kill this entire market overnight by offering a public API. They don't, so here we are.
+
+Here's the code, do it yourself. Send my library link to any AI service you use and ask it to build whatever tool you think will make your life easier while searching for your next home.
+
+With pyfunda, I've already done all the heavy lifting for you.
 
 ## Why pyfunda?
 
@@ -35,6 +41,12 @@ Funda has no public API. If you want Dutch real estate data programmatically, yo
 - No CAPTCHAs or anti-bot blocks
 - 70+ fields including photos, floorplans, coordinates, and listing dates
 - Stable mobile API that doesn't break when the website changes
+
+## Installation
+
+```bash
+pip install pyfunda
+```
 
 ## Quick Start
 

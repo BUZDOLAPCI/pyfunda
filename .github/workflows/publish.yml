@@ -1,7 +1,9 @@
 name: Publish to PyPI
 
 on:
-  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: [pyproject.toml]
 
 jobs:
   publish:
@@ -18,13 +20,27 @@ jobs:
         id: version
         run: echo "version=$(grep '^version' pyproject.toml | cut -d'"' -f2)" >> $GITHUB_OUTPUT
 
+      - name: Check if release exists
+        id: check
+        run: |
+          if gh release view "v${{ steps.version.outputs.version }}" &>/dev/null; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}
+
       - name: Build
+        if: steps.check.outputs.exists == 'false'
         run: uv build
 
       - name: Publish to PyPI
+        if: steps.check.outputs.exists == 'false'
         run: uv publish --token ${{ secrets.PYPI_TOKEN }}
 
       - name: Create GitHub Release
+        if: steps.check.outputs.exists == 'false'
         run: gh release create "v${{ steps.version.outputs.version }}" --title "v${{ steps.version.outputs.version }}" --generate-notes
         env:
           GH_TOKEN: ${{ github.token }}
