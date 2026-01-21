@@ -243,6 +243,34 @@ for listing in f.poll_new_listings(
 
 This bypasses ES search and queries the detail API directly, catching listings that haven't been indexed yet.
 
+#### get_price_history(listing)
+
+Get historical price data for a listing, including previous asking prices, WOZ tax assessments, and sale history.
+
+```python
+listing = f.get_listing(43032486)
+history = f.get_price_history(listing)
+
+for change in history:
+    print(change['date'], change['human_price'], change['status'])
+# 22 okt, 2025    €435.000     asking_price
+# 1 jan, 2025     €472.000     woz
+# 19 aug, 2019    €300.000     asking_price
+```
+
+**Returns:** List of price changes, each containing:
+
+| Field | Description |
+|-------|-------------|
+| `price` | Numeric price |
+| `human_price` | Formatted price (e.g., "€435.000") |
+| `date` | Human readable date |
+| `timestamp` | ISO timestamp |
+| `source` | "Funda" or "WOZ" |
+| `status` | `asking_price`, `sold`, or `woz` |
+
+> **Note:** This fetches data from the Walter Living API. Only called when explicitly requested (lazy-loaded).
+
 ### Listing
 
 Listing objects support dict-like access with convenient aliases.
@@ -493,6 +521,41 @@ for listing in f.poll_new_listings(since_id=latest_id, offering_type="buy"):
 ```
 
 The generator stops after 20 consecutive 404s (configurable via `max_consecutive_404s`).
+
+### Get price history for a listing
+
+```python
+from funda import Funda
+
+f = Funda()
+listing = f.get_listing(43032486)
+
+# Fetch historical prices (WOZ assessments, previous asking prices, sales)
+history = f.get_price_history(listing)
+
+print(f"Price history for {listing['title']}:")
+for change in history:
+    print(f"  {change['date']}: {change['human_price']} ({change['status']})")
+
+# Calculate price change over time
+funda_prices = [c for c in history if c['source'] == 'Funda']
+if len(funda_prices) >= 2:
+    newest, oldest = funda_prices[0]['price'], funda_prices[-1]['price']
+    change_pct = ((newest - oldest) / oldest) * 100
+    print(f"\nPrice change: {change_pct:+.1f}%")
+```
+
+## Disclaimer
+
+This is an unofficial library and is not affiliated with, authorized, maintained, sponsored, or endorsed by Funda or any of its affiliates. Use at your own risk.
+
+This library only accesses publicly available listing data through Funda's undocumented internal API. Using this library may violate Funda's Terms of Service. The authors are not responsible for any consequences of using this software.
+
+This project is intended for personal use, research, and educational purposes only.
+
+- The API is undocumented and may change or break at any time without notice.
+- Please use this library responsibly and avoid excessive requests that could burden Funda's infrastructure.
+- Scraped data may be subject to copyright and usage restrictions. Ensure your use complies with applicable laws.
 
 ## License
 

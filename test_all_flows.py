@@ -633,8 +633,8 @@ def test_session_headers():
     f = Funda()
     session = f.session
 
-    assert 'user-agent' in session.headers, "Should have user-agent header"
-    assert 'Dart' in session.headers['user-agent'], "User-agent should contain 'Dart'"
+    assert 'x-funda-app-platform' in session.headers, "Should have x-funda-app-platform header"
+    assert session.headers['x-funda-app-platform'] == 'android', "Platform should be android"
 
     f.close()
     print("  Session headers set correctly")

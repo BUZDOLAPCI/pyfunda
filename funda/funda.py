@@ -18,13 +18,11 @@ API_WALTER = "https://api.walterliving.com/hunter/lookup"
 
 # Headers for mobile API
 HEADERS = {
-    "user-agent": "Dart/3.9 (dart:io)",
     "x-funda-app-platform": "android",
     "content-type": "application/json",
 }
 
 SEARCH_HEADERS = {
-    "user-agent": "Dart/3.9 (dart:io)",
     "content-type": "application/json",
     "accept": "application/json",
     "referer": "https://www.funda.nl/",
@@ -71,7 +69,7 @@ class Funda:
     def session(self) -> requests.Session:
         """Lazily create HTTP session."""
         if self._session is None:
-            self._session = requests.Session(impersonate="safari")
+            self._session = requests.Session(impersonate="chrome")
             self._session.headers.update(HEADERS)
         return self._session
 
