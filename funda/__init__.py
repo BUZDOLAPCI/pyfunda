@@ -13,10 +13,13 @@ Example usage:
     ...     print(r['title'], r['city'])
 """
 
-from importlib.metadata import version
+from importlib.metadata import PackageNotFoundError, version
 
 from funda.funda import Funda, FundaAPI
 from funda.listing import Listing
 
-__version__ = version("pyfunda")
+try:
+    __version__ = version("pyfunda")
+except PackageNotFoundError:
+    __version__ = "0.0.0"
 __all__ = ["Funda", "FundaAPI", "Listing", "__version__"]
