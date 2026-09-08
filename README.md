@@ -109,6 +109,15 @@ The app-facing APIs live across several `*.funda.io` services:
 
 The request transport, headers, retry profiles, and TLS fingerprint rotation are internal implementation details. Normal users only construct `Funda()` and call the public methods below.
 
+When the mobile search API is unavailable, search falls back to Funda's web search, which is
+behind Akamai. Akamai rejects browser fingerprints once they age out, so the fallback session
+defers to curl_cffi's newest Chrome target rather than pinning a release — a
+`pip install -U curl_cffi` is enough to recover. Pin a specific target if you need to:
+
+```python
+client = Funda(web_impersonate="chrome131")
+```
+
 ## Documentation
 
 - [Start here](docs/README.md)

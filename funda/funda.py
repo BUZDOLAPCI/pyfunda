@@ -32,6 +32,7 @@ from funda.constants import (
     PAGE_SIZE,
     VALID_RADII,
     WEB_SEARCH_BASE,
+    WEB_SEARCH_IMPERSONATE,
 )
 from funda.exceptions import (
     FundaRequestError,
@@ -75,6 +76,7 @@ class Funda:
     max_retries: int = DEFAULT_MAX_RETRIES
     retry_backoff: float = 0.5
     min_request_interval: float = 0.5
+    web_impersonate: str = WEB_SEARCH_IMPERSONATE
 
     _transport: _FundaTransport = field(init=False, repr=False)
     _parallel_runner: _ParallelRunner["Funda"] | None = field(default=None, init=False, repr=False)
@@ -92,7 +94,7 @@ class Funda:
     def web_session(self) -> Any:
         """Lazily create a browser-impersonating session for web search."""
         if self._web_session is None:
-            self._web_session = curl_requests.Session(impersonate="chrome124")
+            self._web_session = curl_requests.Session(impersonate=self.web_impersonate)
             self._web_session.headers.update(
                 {
                     "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
